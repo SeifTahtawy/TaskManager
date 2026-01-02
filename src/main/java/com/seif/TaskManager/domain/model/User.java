@@ -34,4 +34,16 @@ public class User {
     public void setUsername(String username) {
         this.username = username;
     }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getPassword() {
+        return password;
+    }
 }

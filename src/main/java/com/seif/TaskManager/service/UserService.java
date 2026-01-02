@@ -4,6 +4,8 @@ import com.seif.TaskManager.api.dto.request.RegisterUserRequest;
 import com.seif.TaskManager.domain.exception.UserAlreadyExistsException;
 import com.seif.TaskManager.domain.model.User;
 import com.seif.TaskManager.repository.UserRepository;
+import com.seif.TaskManager.security.JwtService;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -11,10 +13,20 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
+    private final MemberUserDetailsService userDetailsService;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository,
+                       PasswordEncoder passwordEncoder,
+                       JwtService jwtService,
+                       MemberUserDetailsService userDetailsService,
+                       AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
+        this.userDetailsService = userDetailsService;
+        this.authenticationManager = authenticationManager;
     }
 
     public void registerUser(RegisterUserRequest request) throws UserAlreadyExistsException {
@@ -28,4 +40,17 @@ public class UserService {
         user.setEmail(request.getEmail());
         userRepository.save(user);
     }
+
+//    public String LoginUser(LoginRequest request) throws InvalidLoginException {
+////            User user = userRepository.findByEmail(request.getEmail())
+////                    .orElseThrow(() -> new InvalidLoginException("Invalid Credentials"));
+////
+////            if(!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+////                throw new InvalidLoginException("Invalid Credentials");
+////            }
+//
+//
+//        return jwtService.generateToken(userDetailsService.loadUserByUsername(request.getEmail()));
+//
+//    }
 }

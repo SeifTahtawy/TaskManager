@@ -1,5 +1,6 @@
 package com.seif.TaskManager.api.exception;
 
+import com.seif.TaskManager.domain.exception.InvalidLoginException;
 import com.seif.TaskManager.domain.exception.UserAlreadyExistsException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,15 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
+                .body(response);
+    }
+
+    @ExceptionHandler(InvalidLoginException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidCredentials(InvalidLoginException ex) {
+        ErrorResponse response = new ErrorResponse(ex.getMessage());
+
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
                 .body(response);
     }
 }

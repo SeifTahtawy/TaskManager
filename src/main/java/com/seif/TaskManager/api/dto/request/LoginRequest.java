@@ -2,33 +2,23 @@ package com.seif.TaskManager.api.dto.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 
-public class RegisterUserRequest {
-
-    @NotBlank
-    private final String username;
+public class LoginRequest {
 
     @NotBlank
     @Email
     private final String email;
 
     @NotBlank
-    @Size(min = 6)
     private final String password;
 
-    public RegisterUserRequest(String username, String email, String password){
-        this.username = username;
+    public LoginRequest(String email, String password) {
         this.email = email;
         this.password = password;
     }
 
     public String getEmail() {
         return email;
-    }
-
-    public String getUsername() {
-        return username;
     }
 
     public String getPassword() {
