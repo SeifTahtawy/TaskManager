@@ -27,7 +27,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
        return http
                 .csrf(csrf ->csrf.disable())
-
+               .headers(headers -> headers.frameOptions(frame -> frame.disable()))
                 .sessionManagement(
                         session -> session
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -37,9 +37,10 @@ public class SecurityConfig {
                                .authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .authorizeHttpRequests(
                         auth -> auth
-                        .requestMatchers("/auth/login", "/auth/register","/h2-console").permitAll()
+                        .requestMatchers("/auth/login", "/auth/register","/h2-console/**", "/h2-console").permitAll()
+                                .requestMatchers("/workspaces/**").authenticated()
                                 .anyRequest().authenticated())
-
+//               .authenticationProvider(authenticationProvider)
                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                         .build();
     }

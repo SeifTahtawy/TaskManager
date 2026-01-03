@@ -41,16 +41,5 @@ public class UserService {
         userRepository.save(user);
     }
 
-//    public String LoginUser(LoginRequest request) throws InvalidLoginException {
-////            User user = userRepository.findByEmail(request.getEmail())
-////                    .orElseThrow(() -> new InvalidLoginException("Invalid Credentials"));
-////
-////            if(!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-////                throw new InvalidLoginException("Invalid Credentials");
-////            }
-//
-//
-//        return jwtService.generateToken(userDetailsService.loadUserByUsername(request.getEmail()));
-//
-//    }
+
 }
