@@ -2,6 +2,7 @@ package com.seif.TaskManager.repository;
 
 import com.seif.TaskManager.domain.model.Workspace;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,4 +13,7 @@ public interface WorkspaceRepository extends JpaRepository<Workspace, Long> {
     Optional<Workspace> findByWorkspaceNameAndOwnerId(String workspaceName, Long ownerId);
 
     List<Workspace> findAllWorkspacesByOwnerId(Long ownerId);
+
+    @Override
+    boolean existsById(@NonNull Long id);
 }
