@@ -14,7 +14,7 @@ public class Workspace {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long workspaceId;
 
     @Column(nullable = false)
     @Size(max = 30)
@@ -26,8 +26,8 @@ public class Workspace {
     public Workspace(){}
 
 
-    public Long getId() {
-        return id;
+    public Long getWorkspaceId() {
+        return workspaceId;
     }
 
     public String getWorkspaceName() {
@@ -36,6 +36,10 @@ public class Workspace {
 
     public Long getOwnerId() {
         return ownerId;
+    }
+
+    public void setWorkspaceId(Long workspaceId) {
+        this.workspaceId = workspaceId;
     }
 
     public void setWorkspaceName(String workspaceName) {

@@ -2,6 +2,7 @@ package com.seif.TaskManager.service;
 
 
 import com.seif.TaskManager.domain.exception.DuplicateWorkspaceNameException;
+import com.seif.TaskManager.domain.exception.WorkspaceNotFoundException;
 import com.seif.TaskManager.domain.model.MemberRole;
 import com.seif.TaskManager.domain.model.User;
 import com.seif.TaskManager.domain.model.Workspace;
@@ -41,7 +42,7 @@ public class WorkspaceService{
         Workspace savedWorkspace = workspaceRepository.save(workspace);
         WorkspaceMembership workspaceMembership = new WorkspaceMembership();
         workspaceMembership.setUserId(ownerId);
-        workspaceMembership.setWorkspaceId(savedWorkspace.getId());
+        workspaceMembership.setWorkspaceId(savedWorkspace.getWorkspaceId());
         workspaceMembership.setRole(MemberRole.OWNER);
         workspaceMembershipRepository.save(workspaceMembership);
     }
@@ -49,10 +50,10 @@ public class WorkspaceService{
     public void addMember(Long currentUserId,
                           Long workspaceId,
                           String username,
-                          MemberRole role) throws AccessDeniedException, EntityNotFoundException{
+                          MemberRole role) throws AccessDeniedException, WorkspaceNotFoundException {
 
         if (!workspaceRepository.existsById(workspaceId)) {
-            throw new EntityNotFoundException("Workspace with ID " + workspaceId + " not found");
+            throw new WorkspaceNotFoundException("Workspace with ID " + workspaceId + " not found");
         }
         WorkspaceMembership requesterMembership = workspaceMembershipRepository
                 .findByWorkspaceIdAndUserId(workspaceId, currentUserId)

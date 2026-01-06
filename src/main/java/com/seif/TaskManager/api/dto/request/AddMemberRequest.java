@@ -6,9 +6,6 @@ import jakarta.validation.constraints.NotBlank;
 public class AddMemberRequest {
 
 
-
-
-
     @NotBlank
     private String username;
 
