@@ -4,7 +4,6 @@ public class AddProjectResponse {
     private  String message;
 
 
-    public AddProjectResponse(){}
     public AddProjectResponse(String message){
         this.message = message;
     }

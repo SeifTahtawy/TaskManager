@@ -34,6 +34,10 @@ public class UserService {
             throw new UserAlreadyExistsException("A user with this email already exists.");
         }
 
+        if(userRepository.findByUsername(request.getUsername()).isPresent()) {
+            throw new UserAlreadyExistsException("Username Taken.");
+        }
+
         User user = new User();
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));

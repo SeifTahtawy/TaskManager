@@ -4,7 +4,6 @@ public class AddMemberResponse {
     private  String message;
 
 
-    public AddMemberResponse(){}
     public AddMemberResponse(String message){
         this.message = message;
     }

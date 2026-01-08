@@ -53,6 +53,15 @@ public class GlobalExceptionHandler {
                 .body(response);
     }
 
+    @ExceptionHandler(ProjectNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateProjectName(ProjectNotFoundException ex) {
+        ErrorResponse response = new ErrorResponse(ex.getMessage());
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(response);
+    }
+
 
     @ExceptionHandler(DuplicateProjectNameException.class)
     public ResponseEntity<ErrorResponse> handleDuplicateProjectName(DuplicateProjectNameException ex) {
@@ -63,6 +72,14 @@ public class GlobalExceptionHandler {
                 .body(response);
     }
 
+    @ExceptionHandler(DuplicateTaskNameException.class)
+    public ResponseEntity<ErrorResponse> handleDuplicateProjectName(DuplicateTaskNameException ex) {
+        ErrorResponse response = new ErrorResponse(ex.getMessage());
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(response);
+    }
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorResponse> handleAccessDeniedException(AccessDeniedException ex){

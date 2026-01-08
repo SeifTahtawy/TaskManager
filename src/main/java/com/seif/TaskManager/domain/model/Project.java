@@ -19,6 +19,7 @@ public class Project {
     @JoinColumn(name = "workspaceId", nullable = false)
     private Workspace workspace;
 
+    @Column(nullable = false)
     private String projectName;
 
     public Project(){}

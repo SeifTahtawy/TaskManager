@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 
 public class CreateWorkspaceRequest {
 
-    @NotBlank
+    @NotBlank(message = "Workspace name cannot be empty")
     private String workspaceName;
 
 

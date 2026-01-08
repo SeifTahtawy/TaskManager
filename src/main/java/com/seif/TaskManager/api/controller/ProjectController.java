@@ -29,7 +29,7 @@ public class ProjectController {
         projectService.addProject(request.getProjectName(), workspaceId, currentUserId);
 
         return new ResponseEntity<>(
-                new AddProjectResponse(request.getProjectName() + " added successfully to the workspace"),
+                new AddProjectResponse(request.getProjectName() + " added successfully to your workspace"),
                 HttpStatus.CREATED
         );
 

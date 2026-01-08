@@ -4,7 +4,6 @@ public class CreateWorkspaceResponse {
     private  String message;
 
 
-    public CreateWorkspaceResponse(){}
     public CreateWorkspaceResponse(String message){
         this.message = message;
     }
