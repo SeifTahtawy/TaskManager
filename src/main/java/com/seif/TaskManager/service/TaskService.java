@@ -3,6 +3,7 @@ package com.seif.TaskManager.service;
 
 import com.seif.TaskManager.domain.exception.DuplicateTaskNameException;
 import com.seif.TaskManager.domain.exception.ProjectNotFoundException;
+import com.seif.TaskManager.domain.exception.TaskNotFoundException;
 import com.seif.TaskManager.domain.model.*;
 import com.seif.TaskManager.repository.ProjectRepository;
 import com.seif.TaskManager.repository.TaskRepository;
@@ -10,6 +11,7 @@ import com.seif.TaskManager.repository.UserRepository;
 import com.seif.TaskManager.repository.WorkspaceMembershipRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -74,7 +76,51 @@ public class TaskService {
         }
 
         taskRepository.save(task);
-
-
     }
+
+    public void assignTask(Long taskId, String assigneeUsername, Long currentUserId)
+            throws TaskNotFoundException,
+            AccessDeniedException,
+            IllegalStateException,
+            UsernameNotFoundException{
+
+
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new TaskNotFoundException("Task Not Found in the project."));
+
+
+        Long workspaceId = task.getProject().getWorkspace().getWorkspaceId();
+
+        WorkspaceMembership requesterMembership = workspaceMembershipRepository
+                .findByWorkspaceIdAndUserId(workspaceId, currentUserId)
+                .orElseThrow(() -> new AccessDeniedException("You are not a member of this workspace."));
+
+        if (requesterMembership.getRole() == MemberRole.MEMBER) {
+            throw new AccessDeniedException("Only owners and admins can assign tasks to member.");
+        }
+
+        if (assigneeUsername == null || assigneeUsername.isBlank()) {
+            task.setAssignee(null);
+            if(task.getStatus() != TaskStatus.DONE) {
+                task.setStatus(TaskStatus.TODO);
+            }
+            taskRepository.save(task);
+            return;
+        }
+
+        User assignee = userRepository.findByUsername(assigneeUsername)
+                .orElseThrow(()-> new UsernameNotFoundException("Assignee not found"));
+
+        WorkspaceMembership assigneeMembership = workspaceMembershipRepository
+                .findByWorkspaceIdAndUserId(workspaceId, assignee.getId())
+                .orElseThrow(()-> new IllegalStateException("Assignee must be a member of the workspace"));
+
+        task.setAssignee(assignee);
+        task.setStatus(TaskStatus.ASSIGNED);
+        taskRepository.save(task);
+    }
+
+
 }
+
+

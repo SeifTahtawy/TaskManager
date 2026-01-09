@@ -2,7 +2,9 @@ package com.seif.TaskManager.api.controller;
 
 
 import com.seif.TaskManager.api.dto.request.AddTaskRequest;
+import com.seif.TaskManager.api.dto.request.AssignTaskRequest;
 import com.seif.TaskManager.api.dto.response.AddTaskResponse;
+import com.seif.TaskManager.api.dto.response.AssignTaskResponse;
 import com.seif.TaskManager.domain.model.MemberUserDetails;
 import com.seif.TaskManager.service.TaskService;
 import jakarta.validation.Valid;
@@ -24,13 +26,33 @@ public class TaskController {
     @PostMapping("/{projectId}/addTask")
     public ResponseEntity<AddTaskResponse> addTask(@Valid @RequestBody AddTaskRequest request,
                                                    @PathVariable Long projectId,
-                                                   @AuthenticationPrincipal MemberUserDetails currentUserDetails){
+                                                   @AuthenticationPrincipal MemberUserDetails currentUserDetails)
+    {
         Long currentUserId = currentUserDetails.getId();
         taskService.addTask(projectId, request.getAssigneeUsername(), request.getTaskName(), currentUserId);
 
         return new ResponseEntity<AddTaskResponse>(
                 new AddTaskResponse(request.getTaskName() + " added successfully to your project"),
                 HttpStatus.CREATED
+        );
+    }
+
+    @PatchMapping("/{taskId}/assignTask")
+    public ResponseEntity<AssignTaskResponse> assignTask(@Valid @RequestBody AssignTaskRequest request,
+                                                         @PathVariable Long taskId,
+                                                         @AuthenticationPrincipal MemberUserDetails currentUserDetails)
+    {
+        Long currentUserId = currentUserDetails.getId();
+        taskService.assignTask(taskId, request.getUsername(), currentUserId);
+        AssignTaskResponse response;
+        if(request.getUsername().isBlank() || request.getUsername() == null){
+            response = new AssignTaskResponse("Task is now unassigned");
+        } else{
+            response = new AssignTaskResponse(request.getUsername() + " assigned.");
+        }
+        return new ResponseEntity<AssignTaskResponse>(
+                response,
+                HttpStatus.OK
         );
     }
 }

@@ -38,9 +38,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         auth -> auth
                         .requestMatchers("/auth/login", "/auth/register","/h2-console/**", "/h2-console").permitAll()
-                                .requestMatchers("/workspaces/**").authenticated()
+//                                .requestMatchers("/workspaces/**").authenticated()
                                 .anyRequest().authenticated())
-//               .authenticationProvider(authenticationProvider)
                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                         .build();
     }
