@@ -4,6 +4,7 @@ import com.seif.TaskManager.domain.exception.*;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -136,4 +137,19 @@ public class GlobalExceptionHandler {
                 errors.put(error.getField(), error.getDefaultMessage()));
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<Map<String, Object>> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+        Map<String, Object> body = new HashMap<>();
+
+        // Check if the error happened specifically with the TaskStatus enum
+        if (ex.getMessage() != null && ex.getMessage().contains("TaskStatus")) {
+            body.put("message", "Invalid TaskStatus. Accepted values: [TODO, ASSIGNED, IN_PROGRESS, DONE]");
+        } else {
+            body.put("message", "Malformed JSON request");
+        }
+
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
 }

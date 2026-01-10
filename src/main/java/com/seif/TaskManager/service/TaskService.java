@@ -86,7 +86,7 @@ public class TaskService {
 
 
         Task task = taskRepository.findById(taskId)
-                .orElseThrow(() -> new TaskNotFoundException("Task Not Found in the project."));
+                .orElseThrow(() -> new TaskNotFoundException("Task Not Found."));
 
 
         Long workspaceId = task.getProject().getWorkspace().getWorkspaceId();
@@ -117,6 +117,44 @@ public class TaskService {
 
         task.setAssignee(assignee);
         task.setStatus(TaskStatus.ASSIGNED);
+        taskRepository.save(task);
+    }
+
+
+    public void updateTaskStatus(Long taskId, TaskStatus newStatus, Long currentUserId){
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new TaskNotFoundException("Task Not Found."));
+
+
+        Long workspaceId = task.getProject().getWorkspace().getWorkspaceId();
+
+        WorkspaceMembership requesterMembership = workspaceMembershipRepository
+                .findByWorkspaceIdAndUserId(workspaceId, currentUserId)
+                .orElseThrow(() -> new AccessDeniedException("You are not a member of this workspace."));
+
+        if(task.getAssignee() == null){
+            throw new IllegalStateException("You cannot update the status of an unassigned task");
+        }
+
+        if(task.getStatus() == TaskStatus.DONE){
+            throw new IllegalStateException("The task is already done.");
+        }
+
+        boolean isOwnerOrAdmin = (requesterMembership.getRole() == MemberRole.OWNER
+                || requesterMembership.getRole() == MemberRole.ADMIN);
+
+        boolean isAssignee = (task.getAssignee().getId().equals(currentUserId));
+
+        if(!isOwnerOrAdmin && !isAssignee){
+            throw new AccessDeniedException("You are not authorized to update this task.");
+        }
+
+
+        if (!isOwnerOrAdmin && newStatus.ordinal() < task.getStatus().ordinal()) {
+            throw new IllegalStateException("Only owners and admins can move tasks backward in the workflow.");
+        }
+
+        task.setStatus(newStatus);
         taskRepository.save(task);
     }
 

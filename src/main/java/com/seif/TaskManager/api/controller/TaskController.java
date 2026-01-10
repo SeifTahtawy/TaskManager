@@ -3,8 +3,10 @@ package com.seif.TaskManager.api.controller;
 
 import com.seif.TaskManager.api.dto.request.AddTaskRequest;
 import com.seif.TaskManager.api.dto.request.AssignTaskRequest;
+import com.seif.TaskManager.api.dto.request.UpdateTaskStatusRequest;
 import com.seif.TaskManager.api.dto.response.AddTaskResponse;
 import com.seif.TaskManager.api.dto.response.AssignTaskResponse;
+import com.seif.TaskManager.api.dto.response.UpdateTaskStatusResponse;
 import com.seif.TaskManager.domain.model.MemberUserDetails;
 import com.seif.TaskManager.service.TaskService;
 import jakarta.validation.Valid;
@@ -52,6 +54,19 @@ public class TaskController {
         }
         return new ResponseEntity<AssignTaskResponse>(
                 response,
+                HttpStatus.OK
+        );
+    }
+
+    @PatchMapping("/{taskId}/updateStatus")
+    public ResponseEntity<UpdateTaskStatusResponse> updateTaskStatus(@Valid @RequestBody UpdateTaskStatusRequest request,
+                                                                     @PathVariable Long taskId,
+                                                                     @AuthenticationPrincipal MemberUserDetails currentUserDetails)
+    {
+        Long currentUserId = currentUserDetails.getId();
+        taskService.updateTaskStatus(taskId, request.getNewStatus(), currentUserId);
+        return new ResponseEntity<UpdateTaskStatusResponse>(
+                new UpdateTaskStatusResponse("Task status changed to " + request.getNewStatus()),
                 HttpStatus.OK
         );
     }
