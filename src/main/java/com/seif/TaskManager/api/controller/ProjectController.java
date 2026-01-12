@@ -22,7 +22,6 @@ public class ProjectController {
 
 
     @PostMapping("/{workspaceId}/addProject")
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<AddProjectResponse> addProject(@Valid @RequestBody AddProjectRequest request,
                                                          @PathVariable Long workspaceId,
                                                          @AuthenticationPrincipal MemberUserDetails currentUserDetails){

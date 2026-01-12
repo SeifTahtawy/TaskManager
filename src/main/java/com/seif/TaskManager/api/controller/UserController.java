@@ -7,12 +7,13 @@ import com.seif.TaskManager.api.dto.response.RegisterUserResponse;
 import com.seif.TaskManager.security.JwtService;
 import com.seif.TaskManager.service.UserService;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -31,14 +32,12 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    @ResponseStatus(HttpStatus.CREATED)
     public RegisterUserResponse registerUser(@Valid @RequestBody RegisterUserRequest request) {
         userService.registerUser(request);
         return new RegisterUserResponse("User registered successfully");
     }
 
     @PostMapping("/login")
-    @ResponseStatus(HttpStatus.OK)
     public LoginResponse login(@Valid @RequestBody LoginRequest request) {
         Authentication authentication = authenticationManager
                 .authenticate(
@@ -52,6 +51,11 @@ public class UserController {
         return new LoginResponse("Login Successful", token);
     }
 
-
+    @GetMapping("/me")
+    public Map<String, String> getProfile(Authentication authentication) {
+        return Map.of(
+                "email", authentication.getName()
+        );
+    }
 
 }
