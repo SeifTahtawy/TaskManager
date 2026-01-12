@@ -12,7 +12,7 @@ Teams work inside shared spaces called **workspaces**, where projects and tasks 
 ### Workspaces
 - A workspace represents a team or organization.
 - Each workspace has:
-  - **One Owner**
+  - **One Owner(an owner can appoint other owners)**
   - **One or more Admins**
   - **Members**
 - Workspaces define who can manage people, projects, and tasks.
