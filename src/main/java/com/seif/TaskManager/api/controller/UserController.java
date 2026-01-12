@@ -7,13 +7,16 @@ import com.seif.TaskManager.api.dto.response.RegisterUserResponse;
 import com.seif.TaskManager.security.JwtService;
 import com.seif.TaskManager.service.UserService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth")
@@ -32,13 +35,16 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public RegisterUserResponse registerUser(@Valid @RequestBody RegisterUserRequest request) {
+    public ResponseEntity<RegisterUserResponse> registerUser(@Valid @RequestBody RegisterUserRequest request) {
         userService.registerUser(request);
-        return new RegisterUserResponse("User registered successfully");
+        return new ResponseEntity<RegisterUserResponse>(
+                new RegisterUserResponse(request.getUsername() + " added successfully to your project"),
+                HttpStatus.CREATED
+        );
     }
 
     @PostMapping("/login")
-    public LoginResponse login(@Valid @RequestBody LoginRequest request) {
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
         Authentication authentication = authenticationManager
                 .authenticate(
                         new UsernamePasswordAuthenticationToken
@@ -48,14 +54,10 @@ public class UserController {
                 );
         UserDetails user = (UserDetails) authentication.getPrincipal();
         String token = jwtService.generateToken(user);
-        return new LoginResponse("Login Successful", token);
+        return new ResponseEntity<LoginResponse>(
+                new LoginResponse("Login Successful", token),
+                HttpStatus.OK) ;
     }
 
-    @GetMapping("/me")
-    public Map<String, String> getProfile(Authentication authentication) {
-        return Map.of(
-                "email", authentication.getName()
-        );
-    }
 
 }
