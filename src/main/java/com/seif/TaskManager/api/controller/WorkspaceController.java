@@ -24,6 +24,7 @@ public class WorkspaceController {
 
 
     @PostMapping("/create")
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<CreateWorkspaceResponse> createWorkspace(@Valid @RequestBody CreateWorkspaceRequest request,
                                                                    @AuthenticationPrincipal MemberUserDetails userDetails)
     {
@@ -37,6 +38,7 @@ public class WorkspaceController {
     }
 
     @PostMapping("/{workspaceId}/addMember")
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<AddMemberResponse> addMember(@PathVariable Long workspaceId,
                                                        @Valid @RequestBody AddMemberRequest request,
                                                        @AuthenticationPrincipal MemberUserDetails userDetails){

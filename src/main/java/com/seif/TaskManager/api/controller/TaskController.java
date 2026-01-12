@@ -26,6 +26,7 @@ public class TaskController {
 
 
     @PostMapping("/{projectId}/addTask")
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<AddTaskResponse> addTask(@Valid @RequestBody AddTaskRequest request,
                                                    @PathVariable Long projectId,
                                                    @AuthenticationPrincipal MemberUserDetails currentUserDetails)
@@ -40,6 +41,7 @@ public class TaskController {
     }
 
     @PatchMapping("/{taskId}/assignTask")
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<AssignTaskResponse> assignTask(@Valid @RequestBody AssignTaskRequest request,
                                                          @PathVariable Long taskId,
                                                          @AuthenticationPrincipal MemberUserDetails currentUserDetails)
@@ -59,6 +61,7 @@ public class TaskController {
     }
 
     @PatchMapping("/{taskId}/updateStatus")
+    @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<UpdateTaskStatusResponse> updateTaskStatus(@Valid @RequestBody UpdateTaskStatusRequest request,
                                                                      @PathVariable Long taskId,
                                                                      @AuthenticationPrincipal MemberUserDetails currentUserDetails)

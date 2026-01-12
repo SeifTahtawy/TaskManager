@@ -37,8 +37,7 @@ public class SecurityConfig {
                                .authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .authorizeHttpRequests(
                         auth -> auth
-                        .requestMatchers("/auth/login", "/auth/register","/h2-console/**", "/h2-console").permitAll()
-//                                .requestMatchers("/workspaces/**").authenticated()
+                        .requestMatchers("/auth/login", "/auth/register","/h2-console/**", "/h2-console", "/v3/api-docs").permitAll()
                                 .anyRequest().authenticated())
                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                         .build();
@@ -53,5 +52,7 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
+
+
 }
 
