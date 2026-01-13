@@ -72,7 +72,7 @@ The application exposes REST APIs for managing workspaces, projects, and tasks.
 
 A complete API specification is available in OpenAPI format:
 
-[View OpenAPI Specification](docs/openapi.yaml)
+[View OpenAPI Specification](docs/api-docs.yaml)
 
 The OpenAPI file can be used with tools such as Swagger UI, Swagger Editor, or Postman to explore and test the APIs interactively.
 
